@@ -75,19 +75,26 @@ cat id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
-#Disable root logins
+####
+#Comment out existing entries and append config to eof
+####
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
-sudo sed -i "s/#PermitRootLogin/PermitRootLogin/g" /etc/ssh/sshd_config
-sudo sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config
+
+#Disable root logins
+sudo sed -i "s/PermitRootLogin/#PermitRootLogin/g" /etc/ssh/sshd_config
+sudo echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 
 #Allow certain users access
-
+sudo sed -i "s/AllowUsers/#AllowUsers/g" /etc/ssh/sshd_config
+sudo echo "AllowUsers paul" >> /etc/ssh/sshd_config
 
 #Disable Protocol 1
-sudo sed -i "s/# Protocol 2,1/Protocol 2/g" /etc/ssh/sshd_config
+sudo sed -i "s/Protocol/#Protocol/g" /etc/ssh/sshd_config
+sudo echo "Protocol 2" >> /etc/ssh/sshd_config
 
 #Disable password authentication forcing use of keys
-sudo sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+sudo sed -i "s/PasswordAuthentication/#PasswordAuthentication/g" /etc/ssh/sshd_config
+sudo echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 
 
 ########
