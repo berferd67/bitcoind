@@ -107,6 +107,7 @@ sudo echo "#Disable password authentication forcing use of keys" >> /etc/ssh/ssh
 sudo echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 sudo echo " " >> /etc/ssh/sshd_config
 
+#Display instructions to copy key to remote host
 echo "########"
 echo "Make sure you copy the key to a remote client BEFORE disabling password authentication"
 echo "########"
@@ -117,7 +118,9 @@ echo "########"
 echo "mkdir ~/.ssh "
 echo "chmod 700 ~/.ssh"
 echo "scp user@host:/%home/%user/.ssh/id_rsa ~/.ssh/"
-pause
+
+#Wait for the user to respond
+read -p "Hit Enter to continue once you've copied the key"
 
 #restart ssh service
 sudo service ssh restart
