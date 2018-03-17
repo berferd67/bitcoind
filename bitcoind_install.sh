@@ -80,12 +80,14 @@ cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
 sudo sed -i "s/#PermitRootLogin/PermitRootLogin/g" /etc/ssh/sshd_config
 sudo sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config
 
-#Disbale Protocol 1
+#Allow certain users access
+
+
+#Disable Protocol 1
 sudo sed -i "s/# Protocol 2,1/Protocol 2/g" /etc/ssh/sshd_config
 
 #Disable password authentication forcing use of keys
 sudo sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
-PasswordAuthentication no
 
 
 ########
