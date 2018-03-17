@@ -78,23 +78,34 @@ chmod 600 ~/.ssh/authorized_keys
 #Comment out existing entries and append config to eof
 #
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
+sudo echo "########" >> /etc/ssh/sshd_config
 sudo echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
+sudo echo "########" >> /etc/ssh/sshd_config
+sudo echo " " >> /etc/ssh/sshd_config
 
 #Disable root logins
 sudo sed -i "s/PermitRootLogin/#PermitRootLogin/g" /etc/ssh/sshd_config
+sudo echo "#Disable root logins" >> /etc/ssh/sshd_config
 sudo echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+sudo echo " " >> /etc/ssh/sshd_config
 
 #Allow certain users access
 sudo sed -i "s/AllowUsers/#AllowUsers/g" /etc/ssh/sshd_config
+sudo echo "#Allow certain users access" >> /etc/ssh/sshd_config
 sudo echo "AllowUsers paul" >> /etc/ssh/sshd_config
+sudo echo " " >> /etc/ssh/sshd_config
 
 #Disable Protocol 1
 sudo sed -i "s/Protocol/#Protocol/g" /etc/ssh/sshd_config
+sudo echo "#Disable Protocol 1" >> /etc/ssh/sshd_config
 sudo echo "Protocol 2" >> /etc/ssh/sshd_config
+sudo echo " " >> /etc/ssh/sshd_config
 
 #Disable password authentication forcing use of keys
 sudo sed -i "s/PasswordAuthentication/#PasswordAuthentication/g" /etc/ssh/sshd_config
+sudo echo "#Disable password authentication forcing use of keys" >> /etc/ssh/sshd_config
 sudo echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+sudo echo " " >> /etc/ssh/sshd_config
 
 
 ########
