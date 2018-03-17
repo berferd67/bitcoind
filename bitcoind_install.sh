@@ -107,16 +107,17 @@ sudo echo "#Disable password authentication forcing use of keys" >> /etc/ssh/ssh
 sudo echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 sudo echo " " >> /etc/ssh/sshd_config
 
-########
-#Make sure you copy the key to a remote client BEFORE disabling password authentication
-########
-##Use the following commands on a REMOTE client
-## copy the secret key to local ssh directory
-##Don't fuck this up or you'll lock yourself out
-#mkdir ~/.ssh 
-#chmod 700 ~/.ssh
-#scp user@host:/%home/%user/.ssh/id_rsa ~/.ssh/
-
+echo "########"
+echo "#Make sure you copy the key to a remote client BEFORE disabling password authentication"
+echo "########"
+echo "Use the following commands on a REMOTE client"
+echo "copy the secret key to local ssh directory"
+echo "Don't fuck this up or you'll lock yourself out"
+echo "########"
+echo "mkdir ~/.ssh "
+echo "chmod 700 ~/.ssh"
+echo "scp user@host:/%home/%user/.ssh/id_rsa ~/.ssh/"
+pause
 
 
 
