@@ -112,15 +112,20 @@ echo "########"
 echo "Make sure you copy the key to a remote client BEFORE disabling password authentication"
 echo "########"
 echo "Use the following commands on a REMOTE client"
-echo "copy the secret key to local ssh directory"
+echo "Copy the secret key to local ssh directory"
 echo "Don't f*ck this up or you'll lock yourself out"
 echo "########"
 echo "mkdir ~/.ssh "
 echo "chmod 700 ~/.ssh"
-echo "scp user@host:/%home/%user/.ssh/id_rsa ~/.ssh/"
+echo "scp %user@%host:/%home/%user/.ssh/id_rsa ~/.ssh/"
 
 #Wait for the user to respond
 read -p "Hit Enter to continue once you've copied the key"
+
+#Confirm remote access
+echo "Confirm remote access before continuing"
+echo "ssh %user@%host"
+read -p "Hit Enter when you're sure you have key based access"
 
 #restart ssh service
 sudo service ssh restart
