@@ -75,10 +75,11 @@ cat id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
-####
+##
 #Comment out existing entries and append config to eof
-####
+##
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
+sudo echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
 
 #Disable root logins
 sudo sed -i "s/PermitRootLogin/#PermitRootLogin/g" /etc/ssh/sshd_config
