@@ -63,7 +63,7 @@ sudo ufw allow 9735
 #Harden ssh server
 ########
 
-#Install fail2ban which blocks repaeated login attempts (banned for 10 mins after 5 failed logins)
+#Install fail2ban which blocks repeated login attempts (banned for 10 mins after 5 failed logins)
 sudo apt-get install fail2ban
 
 #Configure keys based authentication
