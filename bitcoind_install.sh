@@ -32,6 +32,7 @@ sudo sed -i "s/$HOSTNAME/$NEWHOST/g" /etc/hostname
 #display new hostname
 echo "Your new hostname is $NEWHOST"
 
+
 ########
 # Update repos and install updates
 ########
@@ -41,14 +42,12 @@ sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
 #Install dev tools
-
 sudo apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
 
-
 #Install additional dependencies for development and testing
-
 sudo apt-get install -y asciidoc valgrind python3-pip
 sudo pip3 install python-bitcoinlib
+
 
 ########
 #Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
@@ -75,9 +74,9 @@ cat id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
-##
+#
 #Comment out existing entries and append config to eof
-##
+#
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
 sudo echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
 
@@ -103,15 +102,12 @@ sudo echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 ########
 
 #Install Bitcoind
-
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:bitcoin/bitcoin
 sudo apt-get update
 sudo apt-get install -y bitcoind
 
-
 #Install Lightning
-
 git clone https://github.com/ElementsProject/lightning.git
 cd lightning
 make
