@@ -78,6 +78,7 @@ ufw allow 9735
 apt-get install fail2ban
 
 #Configure keys based authentication
+sudo -i -u paul bash << EOF
 cd ~/
 ssh-keygen -t rsa
 chmod 700 ~/.ssh
@@ -85,6 +86,7 @@ chmod 600 ~/.ssh/id_rsa
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
+EOF
 
 #
 #Comment out existing entries and append config to eof
@@ -140,9 +142,8 @@ echo "ssh %user@%host"
 read -p "Hit Enter when you're sure you have key based access"
 
 #restart ssh service
-service ssh restart
-# PAUL - this might terminate the SSH session you are running the script from...
-# Suggest you replace with "/etc/init.d/networking restart"
+/etc/init.d/networking restart
+
 
 ########
 #Install Bitcoin and Lightning
@@ -161,7 +162,8 @@ make
 
 
 #Run bitcoind and lightningd
-
+sudo -i -u paul bash << EOF
 # bitcoind &
 # ./lightningd/lightningd &
 # ./cli/lightning-cli help
+EOF
