@@ -46,9 +46,7 @@ echo "Your new hostname is $NEWHOST"
 # Update repos and install updates
 ########
 
-~/apt-get update
-~/apt-get upgrade
-apt-get dist-upgrade
+apt-get update && apt-get dist-upgrade && apt-get clean
 
 #Install dev tools
 apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
