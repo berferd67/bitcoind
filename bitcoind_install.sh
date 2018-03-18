@@ -55,6 +55,10 @@ apt-get install -y autoconf automake build-essential git libtool libgmp-dev libs
 apt-get install -y asciidoc valgrind python3-pip
 pip3 install python-bitcoinlib
 
+adduser paul
+echo "Enter new passowrd for new user: "
+read NEWPASSWORD
+echo $NEWPASSWORD |passwd paul --stdin
 
 ########
 #Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
