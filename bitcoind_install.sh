@@ -8,6 +8,15 @@
 #########
 
 ########
+# Check whether script is running as root
+########
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+########
 # Set Hostname
 ########
 
@@ -37,26 +46,24 @@ echo "Your new hostname is $NEWHOST"
 # Update repos and install updates
 ########
 
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get dist-upgrade
+apt-get update && apt-get dist-upgrade && apt-get clean
 
 #Install dev tools
-sudo apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
+apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
 
 #Install additional dependencies for development and testing
-sudo apt-get install -y asciidoc valgrind python3-pip
-sudo pip3 install python-bitcoinlib
+apt-get install -y asciidoc valgrind python3-pip
+pip3 install python-bitcoinlib
 
 
 ########
 #Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
 ########
 
-sudo ufw enable
-sudo ufw allow 22
-sudo ufw allow 8333
-sudo ufw allow 9735
+ufw enable
+ufw allow 22
+ufw allow 8333
+ufw allow 9735
 
 
 ########
@@ -64,9 +71,10 @@ sudo ufw allow 9735
 ########
 
 #Install fail2ban which blocks repeated login attempts (banned for 10 mins after 5 failed logins)
-sudo apt-get install fail2ban
+apt-get install fail2ban
 
 #Configure keys based authentication
+cd ~/
 ssh-keygen -t rsa
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_rsa
@@ -78,34 +86,34 @@ chmod 600 ~/.ssh/authorized_keys
 #Comment out existing entries and append config to eof
 #
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
-sudo echo "########" >> /etc/ssh/sshd_config
-sudo echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
-sudo echo "########" >> /etc/ssh/sshd_config
-sudo echo " " >> /etc/ssh/sshd_config
+echo "########" >> /etc/ssh/sshd_config
+echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
+echo "########" >> /etc/ssh/sshd_config
+echo " " >> /etc/ssh/sshd_config
 
 #Disable root logins
-sudo sed -i "s/PermitRootLogin/#PermitRootLogin/g" /etc/ssh/sshd_config
-sudo echo "#Disable root logins" >> /etc/ssh/sshd_config
-sudo echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-sudo echo " " >> /etc/ssh/sshd_config
+sed -i "s/PermitRootLogin/#PermitRootLogin/g" /etc/ssh/sshd_config
+echo "#Disable root logins" >> /etc/ssh/sshd_config
+echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+echo " " >> /etc/ssh/sshd_config
 
 #Allow certain users access
-sudo sed -i "s/AllowUsers/#AllowUsers/g" /etc/ssh/sshd_config
-sudo echo "#Allow certain users access" >> /etc/ssh/sshd_config
-sudo echo "AllowUsers paul" >> /etc/ssh/sshd_config
-sudo echo " " >> /etc/ssh/sshd_config
+sed -i "s/AllowUsers/#AllowUsers/g" /etc/ssh/sshd_config
+echo "#Allow certain users access" >> /etc/ssh/sshd_config
+echo "AllowUsers paul" >> /etc/ssh/sshd_config
+echo " " >> /etc/ssh/sshd_config
 
 #Disable Protocol 1
-sudo sed -i "s/Protocol/#Protocol/g" /etc/ssh/sshd_config
-sudo echo "#Disable Protocol 1" >> /etc/ssh/sshd_config
-sudo echo "Protocol 2" >> /etc/ssh/sshd_config
-sudo echo " " >> /etc/ssh/sshd_config
+sed -i "s/Protocol/#Protocol/g" /etc/ssh/sshd_config
+echo "#Disable Protocol 1" >> /etc/ssh/sshd_config
+echo "Protocol 2" >> /etc/ssh/sshd_config
+echo " " >> /etc/ssh/sshd_config
 
 #Disable password authentication forcing use of keys
-sudo sed -i "s/PasswordAuthentication/#PasswordAuthentication/g" /etc/ssh/sshd_config
-sudo echo "#Disable password authentication forcing use of keys" >> /etc/ssh/sshd_config
-sudo echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-sudo echo " " >> /etc/ssh/sshd_config
+sed -i "s/PasswordAuthentication/#PasswordAuthentication/g" /etc/ssh/sshd_config
+echo "#Disable password authentication forcing use of keys" >> /etc/ssh/sshd_config
+echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+echo " " >> /etc/ssh/sshd_config
 
 #Display instructions to copy key to remote host
 echo "########"
@@ -128,18 +136,19 @@ echo "ssh %user@%host"
 read -p "Hit Enter when you're sure you have key based access"
 
 #restart ssh service
-sudo service ssh restart
-
+service ssh restart
+# PAUL - this might terminate the SSH session you are running the script from...
+# Suggest you replace with "/etc/init.d/networking restart"
 
 ########
 #Install Bitcoin and Lightning
 ########
 
 #Install Bitcoind
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:bitcoin/bitcoin
-sudo apt-get update
-sudo apt-get install -y bitcoind
+apt-get install software-properties-common
+add-apt-repository ppa:bitcoin/bitcoin
+apt-get update
+apt-get install -y bitcoind
 
 #Install Lightning
 git clone https://github.com/ElementsProject/lightning.git
