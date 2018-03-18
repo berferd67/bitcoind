@@ -55,7 +55,7 @@ apt-get install -y autoconf automake build-essential git libtool libgmp-dev libs
 apt-get install -y asciidoc valgrind python3-pip
 pip3 install python-bitcoinlib
 
-#Add a user to be used for bitcoind and lighningd
+#Add a user to be used for bitcoind and lightningd
 echo "Enter username for new user: "
 read NEWUSER
 adduser $NEWUSER
