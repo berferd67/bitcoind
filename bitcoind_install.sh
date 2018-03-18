@@ -56,7 +56,7 @@ apt-get install -y asciidoc valgrind python3-pip
 pip3 install python-bitcoinlib
 
 adduser paul
-echo "Enter new passowrd for new user: "
+echo "Enter new password for new user: "
 read NEWPASSWORD
 echo $NEWPASSWORD |passwd paul --stdin
 
