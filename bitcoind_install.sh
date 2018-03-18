@@ -55,6 +55,13 @@ apt-get install -y autoconf automake build-essential git libtool libgmp-dev libs
 apt-get install -y asciidoc valgrind python3-pip
 pip3 install python-bitcoinlib
 
+#Add a user to be used for bitcoind and lightningd
+echo "Enter username for new user: "
+read NEWUSER
+adduser $NEWUSER
+echo "Enter new password for new user: "
+read NEWPASSWORD
+echo $NEWPASSWORD |passwd $NEWUSER --stdin
 
 ########
 #Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
@@ -74,6 +81,7 @@ ufw allow 9735
 apt-get install fail2ban
 
 #Configure keys based authentication
+sudo -i -u $NEWUSER bash << EOF
 cd ~/
 ssh-keygen -t rsa
 chmod 700 ~/.ssh
@@ -81,6 +89,7 @@ chmod 600 ~/.ssh/id_rsa
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
+EOF
 
 #
 #Comment out existing entries and append config to eof
@@ -136,9 +145,8 @@ echo "ssh %user@%host"
 read -p "Hit Enter when you're sure you have key based access"
 
 #restart ssh service
-service ssh restart
-# PAUL - this might terminate the SSH session you are running the script from...
-# Suggest you replace with "/etc/init.d/networking restart"
+/etc/init.d/networking restart
+
 
 ########
 #Install Bitcoin and Lightning
@@ -155,9 +163,18 @@ git clone https://github.com/ElementsProject/lightning.git
 cd lightning
 make
 
+#Create crontab entries to start services at reboot
+sudo -i -u $NEWUSER bash << EOF
+echo "@reboot /usr/local/bin/bitcoind -daemon" >> /var/spool/cron/$NEWUSER
+echo "@reboot /home/"$NEWUSER"/lightning/lightningd" >> /var/spool/cron/$NEWUSER
+# ./lightningd/lightningd &
+# ./cli/lightning-cli help
+#EOF
+
 
 #Run bitcoind and lightningd
-
+#sudo -i -u $NEWUSER bash << EOF
 # bitcoind &
 # ./lightningd/lightningd &
 # ./cli/lightning-cli help
+#EOF
