@@ -50,7 +50,8 @@ apt-get update && apt-get dist-upgrade && apt-get clean
 
 #Install dev tools
 apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
-yum install -y gmp-devel sqlite3-devel
+yum install -y gmp-devel sqlite3-devel epel-release
+yum install -y python34
 
 #Install additional dependencies for development and testing
 apt-get install -y asciidoc valgrind python3-pip
