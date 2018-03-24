@@ -69,6 +69,12 @@ echo $NEWPASSWORD |passwd $NEWUSER --stdin
 #Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
 ########
 
+#firewall-cmd --add-port 22/tcp
+#firewall-cmd --add-port 22/tcp --permanent
+#firewall-cmd --add-port 8333/tcp
+#firewall-cmd --add-port 8333/tcp --permanent
+#firewall-cmd --add-port 9735/tcp
+#firewall-cmd --add-port 9735/tcp --permanent
 ufw enable
 ufw allow 22
 ufw allow 8333
