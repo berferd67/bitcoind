@@ -49,13 +49,18 @@ echo "Your new hostname is $NEWHOST"
 apt-get update && apt-get dist-upgrade && apt-get clean
 
 #Install dev tools
-apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
-yum install -y gmp-devel sqlite3-devel epel-release
-yum install -y python34
+#apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
+yum install -y clang gmp-devel libsq3-devel net-tools libsodium-devel valgrind wget git asciidoc
+sudo yum clean all
 
-#Install additional dependencies for development and testing
-apt-get install -y asciidoc valgrind python3-pip
-pip3 install python-bitcoinlib
+#Install Python3
+sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+sudo yum -y install python36u
+sudo yum -y install python36u-pip
+sudo yum -y install python36u-devel
+sudo pip3.6 install python-bitcoinlib
+sudo pip3.6 install --upgrade pip
+
 
 #Add a user to be used for bitcoind and lightningd
 echo "Enter username for new user: "
@@ -69,16 +74,16 @@ echo $NEWPASSWORD |passwd $NEWUSER --stdin
 #Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
 ########
 
-#firewall-cmd --add-port 22/tcp
-#firewall-cmd --add-port 22/tcp --permanent
-#firewall-cmd --add-port 8333/tcp
-#firewall-cmd --add-port 8333/tcp --permanent
-#firewall-cmd --add-port 9735/tcp
-#firewall-cmd --add-port 9735/tcp --permanent
-ufw enable
-ufw allow 22
-ufw allow 8333
-ufw allow 9735
+firewall-cmd --add-port 22/tcp
+firewall-cmd --add-port 22/tcp --permanent
+firewall-cmd --add-port 8333/tcp
+firewall-cmd --add-port 8333/tcp --permanent
+firewall-cmd --add-port 9735/tcp
+firewall-cmd --add-port 9735/tcp --permanent
+#ufw enable
+#ufw allow 22
+#ufw allow 8333
+#ufw allow 9735
 
 
 ########
