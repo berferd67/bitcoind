@@ -2,21 +2,22 @@
 #Harden ssh server
 ########
 
-
 #Configure keys based authentication
-sudo -i -u $NEWUSER bash << EOF
+
 cd ~/
+mkdir ~/.ssh
 ssh-keygen -t rsa
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_rsa
 cat id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
-EOF
+
 
 #
 #Comment out existing entries and append config to eof
 #
+
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
 echo "########" >> /etc/ssh/sshd_config
 echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
@@ -32,7 +33,7 @@ echo " " >> /etc/ssh/sshd_config
 #Allow certain users access
 sed -i "s/AllowUsers/#AllowUsers/g" /etc/ssh/sshd_config
 echo "#Allow certain users access" >> /etc/ssh/sshd_config
-echo "AllowUsers paul" >> /etc/ssh/sshd_config
+echo "AllowUsers %USER" >> /etc/ssh/sshd_config
 echo " " >> /etc/ssh/sshd_config
 
 #Disable Protocol 1
