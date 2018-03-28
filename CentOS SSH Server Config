@@ -1,3 +1,12 @@
+#!/bin/sh
+
+#########
+# SSH Config for CentOS 7.4 Server Script
+# Author: Paul Guest <paul.guest@acadsol.co.uk>
+# Version: v0.1, 2018-03-28
+# Source: https://github.com/berferd67/bitcoind
+#########
+
 ########
 #Harden ssh server
 ########
@@ -19,6 +28,7 @@ chmod 600 ~/.ssh/authorized_keys
 #
 
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
+
 echo "########" >> /etc/ssh/sshd_config
 echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
 echo "########" >> /etc/ssh/sshd_config
