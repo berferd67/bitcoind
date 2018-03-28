@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #########
-# Bitcoind and c-lightning on Ubuntu 16.04.4 Server Script
+# Bitcoind and c-lightning on CentOS 7.4 Server Script
 # Author: Paul Guest <paul.guest@acadsol.co.uk>
-# Version: v0.1, 2018-03-17
+# Version: v0.1, 2018-03-28
 # Source: https://github.com/berferd67/bitcoind
 #########
 
@@ -46,8 +46,6 @@ echo "Your new hostname is $NEWHOST"
 # Update repos and install updates
 ########
 
-apt-get update && apt-get dist-upgrade && apt-get clean
-
 #Install dev tools
 #apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
 yum install -y clang gmp-devel libsq3-devel net-tools libsodium-devel valgrind wget git asciidoc
@@ -80,85 +78,9 @@ firewall-cmd --add-port 8333/tcp
 firewall-cmd --add-port 8333/tcp --permanent
 firewall-cmd --add-port 9735/tcp
 firewall-cmd --add-port 9735/tcp --permanent
-#ufw enable
-#ufw allow 22
-#ufw allow 8333
-#ufw allow 9735
 
 
-########
-#Harden ssh server
-########
 
-#Install fail2ban which blocks repeated login attempts (banned for 10 mins after 5 failed logins)
-apt-get install fail2ban
-
-#Configure keys based authentication
-sudo -i -u $NEWUSER bash << EOF
-cd ~/
-ssh-keygen -t rsa
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/id_rsa
-cat id_rsa.pub >> ~/.ssh/authorized_keys
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/authorized_keys
-EOF
-
-#
-#Comment out existing entries and append config to eof
-#
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ORIG
-echo "########" >> /etc/ssh/sshd_config
-echo "# Installation Script Hardening Entries" >> /etc/ssh/sshd_config
-echo "########" >> /etc/ssh/sshd_config
-echo " " >> /etc/ssh/sshd_config
-
-#Disable root logins
-sed -i "s/PermitRootLogin/#PermitRootLogin/g" /etc/ssh/sshd_config
-echo "#Disable root logins" >> /etc/ssh/sshd_config
-echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-echo " " >> /etc/ssh/sshd_config
-
-#Allow certain users access
-sed -i "s/AllowUsers/#AllowUsers/g" /etc/ssh/sshd_config
-echo "#Allow certain users access" >> /etc/ssh/sshd_config
-echo "AllowUsers paul" >> /etc/ssh/sshd_config
-echo " " >> /etc/ssh/sshd_config
-
-#Disable Protocol 1
-sed -i "s/Protocol/#Protocol/g" /etc/ssh/sshd_config
-echo "#Disable Protocol 1" >> /etc/ssh/sshd_config
-echo "Protocol 2" >> /etc/ssh/sshd_config
-echo " " >> /etc/ssh/sshd_config
-
-#Disable password authentication forcing use of keys
-sed -i "s/PasswordAuthentication/#PasswordAuthentication/g" /etc/ssh/sshd_config
-echo "#Disable password authentication forcing use of keys" >> /etc/ssh/sshd_config
-echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-echo " " >> /etc/ssh/sshd_config
-
-#Display instructions to copy key to remote host
-echo "########"
-echo "Make sure you copy the key to a remote client BEFORE disabling password authentication"
-echo "########"
-echo "Use the following commands on a REMOTE client"
-echo "Copy the secret key to local ssh directory"
-echo "Don't f*ck this up or you'll lock yourself out"
-echo "########"
-echo "mkdir ~/.ssh "
-echo "chmod 700 ~/.ssh"
-echo "scp %user@%host:/%home/%user/.ssh/id_rsa ~/.ssh/"
-
-#Wait for the user to respond
-read -p "Hit Enter to continue once you've copied the key"
-
-#Confirm remote access
-echo "Confirm remote access before continuing"
-echo "ssh %user@%host"
-read -p "Hit Enter when you're sure you have key based access"
-
-#restart ssh service
-/etc/init.d/networking restart
 
 
 ########
