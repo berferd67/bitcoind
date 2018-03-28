@@ -1,0 +1,102 @@
+#!/bin/sh
+
+#########
+# Bitcoind and c-lightning on Ubuntu 16.04.4 Server Script
+# Author: Paul Guest <paul.guest@acadsol.co.uk>
+# Version: v0.2, 2018-03-28
+# Source: https://github.com/berferd67/bitcoind
+#########
+
+########
+# Check whether script is running as root
+########
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+########
+# Set Hostname
+########
+
+#Assign existing hostname to $HOSTNAME
+HOSTNAME=$(cat /etc/hostname)
+
+#Display existing hostname
+echo "Existing hostname is $HOSTNAME"
+
+#Ask for new domainname $DOMAIN
+echo "Enter new domain name: "
+read DOMAIN
+
+#Ask for new hostname $NEWHOST
+echo "Enter new hostname: "
+read NEWHOST
+
+#change hostname in /etc/hosts & /etc/hostname
+sed -i "s/$HOSTNAME/$NEWHOST/g" /etc/hosts
+sed -i "s/$HOSTNAME/$NEWHOST/g" /etc/hostname
+
+#display new hostname
+echo "Your new hostname is $NEWHOST"
+
+########
+# Update repos and install updates
+########
+
+apt-get update && apt-get dist-upgrade && apt-get clean
+
+#Install dev tools
+apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
+
+#Add a user to be used for bitcoind and lightningd
+echo "Enter username for new user: "
+read NEWUSER
+adduser $NEWUSER
+echo "Enter new password for new user: "
+read NEWPASSWORD
+echo $NEWPASSWORD |passwd $NEWUSER --stdin
+
+########
+#Configure Uncomplicated Firewall to allow access to ssh, bitcoind and lightningd
+########
+
+ufw enable
+ufw allow 22
+ufw allow 8333
+ufw allow 9735
+
+########
+#Protect ssh server
+########
+
+#Install fail2ban which blocks repeated login attempts (banned for 10 mins after 5 failed logins)
+apt-get install fail2ban
+
+########
+#Install Bitcoin and Lightning
+########
+
+#Install Bitcoind
+apt-get install software-properties-common
+add-apt-repository ppa:bitcoin/bitcoin
+apt-get update
+apt-get install -y bitcoind
+
+#Install Lightning
+git clone https://github.com/ElementsProject/lightning.git
+cd lightning
+make
+make install
+
+#Create crontab entries to start services at reboot
+sudo -i -u $NEWUSER bash << EOF
+echo "@reboot /usr/local/bin/bitcoind -daemon" >> /var/spool/cron/$NEWUSER
+echo "@reboot /usr/local/bin/lightningd --network=bitcoin" >> /var/spool/cron/$NEWUSER
+
+#Run bitcoind and lightningd
+# bitcoind &
+# ./lightningd/lightningd &
+# ./cli/lightning-cli help
+
