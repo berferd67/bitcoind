@@ -25,6 +25,8 @@ chmod 600 ~/.ssh/authorized_keys
 #
 #Get Firewall to drop reapeated failed attempts with a TCP reset
 #
+sudo firewall-cmd --add-port 22/tcp
+sudo firewall-cmd --add-port 22/tcp --permanent
 sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT_direct 0 -p tcp --dport 22 -m state --state NEW -m recent --set
 sudo firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT_direct 1 -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 30 --hitcount 4 -j REJECT --reject-with tcp-reset
 sudo firewall-cmd --reload
