@@ -23,6 +23,13 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
 #
+#Install Fail2Ban
+#
+git clone https://github.com/fail2ban/fail2ban.git
+cd fail2ban
+sudo python setup.py install 
+
+#
 #Get Firewall to drop reapeated failed attempts with a TCP reset
 #
 sudo firewall-cmd --add-port 22/tcp
