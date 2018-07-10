@@ -96,6 +96,7 @@ apt-get install -y bitcoind
 #Install Lightning
 git clone https://github.com/ElementsProject/lightning.git
 cd lightning
+./configure
 make
 
 #Create crontab entries to start services at reboot
