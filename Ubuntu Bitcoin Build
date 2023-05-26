@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #########
-# Bitcoind and c-lightning on Ubuntu 16.04.4 Server Script
+# Bitcoind and c-lightning on Ubuntu 22.04.2 Server Script
 # Author: Paul Guest <paul.guest@acadsol.co.uk>
-# Version: v0.2, 2018-03-28
+# Version: v0.3, 2023-05-26
 # Source: https://github.com/berferd67/bitcoind
 #########
 
@@ -45,7 +45,7 @@ echo "Your new hostname is $NEWHOST"
 # Update repos and install updates
 ########
 
-apt-get update && apt-get dist-upgrade && apt-get clean
+apt update && apt dist-upgrade && apt clean
 
 #Install dev tools
 apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
@@ -72,17 +72,17 @@ ufw allow 9735
 ########
 
 #Install fail2ban which blocks repeated login attempts (banned for 10 mins after 5 failed logins)
-apt-get install fail2ban
+apt install fail2ban
 
 ########
 #Install Bitcoin and Lightning
 ########
 
 #Install Bitcoind
-apt-get install software-properties-common
+apt install software-properties-common
 add-apt-repository ppa:bitcoin/bitcoin
-apt-get update
-apt-get install -y bitcoind
+apt update
+apt install -y bitcoind
 
 #Install Lightning
 git clone https://github.com/ElementsProject/lightning.git
