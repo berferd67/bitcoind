@@ -48,7 +48,7 @@ echo "Your new hostname is $NEWHOST"
 apt update && apt dist-upgrade && apt clean
 
 #Install dev tools
-apt-get install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
+apt install -y autoconf automake build-essential git libtool libgmp-dev libsqlite3-dev python python3 net-tools libsodium-dev
 
 #Add a user to be used for bitcoind and lightningd
 echo "Enter username for new user: "
